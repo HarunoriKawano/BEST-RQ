@@ -8,11 +8,15 @@ from best_rq_config import BestRqConfig
 class RandomProjectionQuantizer(nn.Module):
     def __init__(self, config: BestRqConfig):
         super().__init__()
-        self.mask_size = int(config.quantized_representation_time / config.stride_time)
-        self.random_projection = nn.Linear(config.mel_filter_size*self.mask_size, config.code_book_size, bias=False)
+        self.random_projection = nn.Linear(
+            config.mel_filter_size*config.num_temporal_dimension_reduction_steps, config.code_book_size, bias=False
+        )
         nn.init.xavier_uniform_(self.random_projection.weight)
 
         self.code_book = nn.Parameter(torch.randn(config.num_code_books, config.code_book_size))
+
+        self.random_projection.weight.requires_grad = False
+        self.code_book.requires_grad = False
 
     def forward(self, input_values: torch.Tensor, mask_time_indices: torch.Tensor) -> torch.Tensor:
         """
