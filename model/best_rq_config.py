@@ -1,0 +1,13 @@
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class BestRqConfig:
+    mask_probs: float  # 0.0 - 1.0
+    quantized_representation_time: float  # Quantized representation time sec (Default: 0.4)
+    mel_filter_size: int  # Mel filter bank dimension.
+    stride_time: float  # stride_time sec.
+    code_book_size: int  # Dimension of code book (Default: 16)
+    num_code_books: int  # Number of code books (Default: 8192)
+    num_temporal_dimension_reduction_steps: int  # Number of temporal dimension reduction steps by the encoder
+    encoder_hidden_size: int  # Number of encoder output dimensions
