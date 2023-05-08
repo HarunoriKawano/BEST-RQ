@@ -17,6 +17,7 @@ class BestRqFramework(nn.Module):
         self.encoder = encoder
         self.config = config
         self.out_linear = nn.Linear(config.encoder_hidden_size, config.code_book_size)
+        self.num_time_steps = int(config.stride_time // (config.stride_time * self.K))
 
     def forward(self, input_values: torch.Tensor, input_lengths: torch.Tensor):
         """
@@ -67,16 +68,23 @@ class BestRqFramework(nn.Module):
         batch_size, num_steps, hidden_size = input_values.size()
 
         # non mask: 0, maks: 1
-        time_mask_indices = torch.zeros(batch_size, num_steps, device=input_values.device, dtype=torch.bool)
-        num_masks = 0
+        time_mask_indices = torch.zeros(
+            batch_size, num_steps + self.num_time_steps,
+            device=input_values.device, dtype=torch.bool
+        )
 
         for batch in range(batch_size):
             time_mask_idx_candidates = list(range(int(input_lengths[batch])))
-            k = int(self.config.mask_probs * input_lengths[batch])
-            num_masks += k
-            time_mask_idx_array = torch.tensor(random.sample(time_mask_idx_candidates, k=k), device=input_values.device)
+            k = int(self.config.mask_prob * input_lengths[batch])
+            start_time_mask_idx_array = torch.tensor(
+                random.sample(time_mask_idx_candidates, k=k), device=input_values.device
+            )
 
-            time_mask_indices[batch, time_mask_idx_array] = 1
+            for i in range(self.num_time_steps):
+                time_mask_indices[batch, start_time_mask_idx_array+i] = 1
+
+        time_mask_indices = time_mask_indices[:, :-self.num_time_steps]
+        num_masks = sum(time_mask_indices.flatten())
 
         # Replace to random value where mask
         random_values = torch.normal(mean=0, std=0.1, size=(num_masks, hidden_size))

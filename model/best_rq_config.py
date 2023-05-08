@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class BestRqConfig:
-    mask_probs: float  # 0.0 - 1.0
-    quantized_representation_time: float  # Quantized representation time sec (Default: 0.4)
+    mask_prob: float  # 0.0 - 1.0
+    mask_time: float  # Mask time sec (Default: 0.4)
     mel_filter_size: int  # Mel filter bank dimension.
     stride_time: float  # stride_time sec.
     code_book_size: int  # Dimension of code book (Default: 16)
