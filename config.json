@@ -1,0 +1,10 @@
+{
+  "mask_prob": 0.065,
+  "mask_time": 0.4,
+  "input_feature_size": 80,
+  "stride_time": 0.01,
+  "code_book_size": 16,
+  "num_code_books": 8192,
+  "num_temporal_dimension_reduction_steps": 4,
+  "encoder_hidden_size": 768
+}

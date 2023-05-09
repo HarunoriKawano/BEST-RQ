@@ -2,14 +2,14 @@ import torch
 from torch import nn
 from torch.linalg import vector_norm
 
-from best_rq_config import BestRqConfig
+from model.best_rq_config import BestRqConfig
 
 
 class RandomProjectionQuantizer(nn.Module):
     def __init__(self, config: BestRqConfig):
         super().__init__()
         self.random_projection = nn.Linear(
-            config.mel_filter_size*config.num_temporal_dimension_reduction_steps, config.code_book_size, bias=False
+            config.input_feature_size * config.num_temporal_dimension_reduction_steps, config.code_book_size, bias=False
         )
         nn.init.xavier_uniform_(self.random_projection.weight)
 
@@ -33,6 +33,6 @@ class RandomProjectionQuantizer(nn.Module):
         # Compute l2 norm targets and code vectors
         vector_distances = vector_norm(targets - self.code_book, dim=-1)
 
-        labels = torch.argmin(vector_distances)
+        labels = torch.argmin(vector_distances, dim=-1)
 
         return labels

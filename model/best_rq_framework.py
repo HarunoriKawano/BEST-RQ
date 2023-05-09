@@ -16,8 +16,8 @@ class BestRqFramework(nn.Module):
         self.random_projection_quantizer = RandomProjectionQuantizer(config)
         self.encoder = encoder
         self.config = config
-        self.out_linear = nn.Linear(config.encoder_hidden_size, config.code_book_size)
-        self.num_time_steps = int(config.stride_time // (config.stride_time * self.K))
+        self.out_linear = nn.Linear(config.encoder_hidden_size, config.num_code_books)
+        self.num_time_steps = int(config.mask_time // (config.stride_time * self.K))
 
     def forward(self, input_values: torch.Tensor, input_lengths: torch.Tensor):
         """
@@ -39,7 +39,7 @@ class BestRqFramework(nn.Module):
 
         # Reshape to number of encoder out steps
         input_values = input_values.view(batch_size, -1, self.K * hidden_size)
-        quantized_input_lengths = input_lengths // (num_steps / self.K) - 1
+        quantized_input_lengths = input_lengths // self.K - 1
 
         masked_input_values, time_mask_indices = self.masking(input_values, quantized_input_lengths)
         masked_input_values = masked_input_values.view(batch_size, num_steps, hidden_size)
@@ -87,7 +87,7 @@ class BestRqFramework(nn.Module):
         num_masks = sum(time_mask_indices.flatten())
 
         # Replace to random value where mask
-        random_values = torch.normal(mean=0, std=0.1, size=(num_masks, hidden_size))
+        random_values = torch.normal(mean=0, std=0.1, size=(num_masks, hidden_size), device=input_values.device)
         input_values[time_mask_indices == 1] = random_values
 
         return input_values, time_mask_indices

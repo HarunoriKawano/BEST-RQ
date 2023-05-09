@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class BestRqConfig:
     mask_prob: float  # 0.0 - 1.0
     mask_time: float  # Mask time sec (Default: 0.4)
-    mel_filter_size: int  # Mel filter bank dimension.
+    input_feature_size: int  # Dimension of input.
     stride_time: float  # stride_time sec.
     code_book_size: int  # Dimension of code book (Default: 16)
     num_code_books: int  # Number of code books (Default: 8192)
