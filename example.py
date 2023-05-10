@@ -39,3 +39,4 @@ if __name__ == '__main__':
     loss = cross_entropy(targets, labels)
 
     print(loss)
+    loss.backward()
