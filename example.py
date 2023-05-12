@@ -23,17 +23,20 @@ class ExampleEncoder(nn.Module):
 
 
 if __name__ == '__main__':
-    encoder = ExampleEncoder()
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    print(f"Use device: {device}")
+
+    encoder = ExampleEncoder().to(device)
 
     # `(batch size, time steps, feature size)`
-    inputs = torch.randn(4, 1000, 80)
+    inputs = torch.randn(4, 1000, 80).to(device)
     # `(batch size)` Number of available time steps per batch
-    input_lengths = torch.tensor([1000, 871, 389, 487])
+    input_lengths = torch.tensor([1000, 871, 389, 487]).to(device)
 
     with open("config.json", "r", encoding="utf-8") as f:
         config = BestRqConfig(**json.load(f))
 
-    model = BestRqFramework(config, encoder)
+    model = BestRqFramework(config, encoder).to(device)
 
     targets, labels = model(inputs, input_lengths)
     loss = cross_entropy(targets, labels)
