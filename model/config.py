@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class BestRqConfig:
+class Config:
     mask_prob: float  # 0.0 - 1.0
     mask_time: float  # Mask time sec (Default: 0.4)
     input_feature_size: int  # Dimension of input.

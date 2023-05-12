@@ -4,12 +4,12 @@ import torch
 from torch import nn
 from torchvision.transforms import Normalize
 
-from model.best_rq_config import BestRqConfig
+from model.config import Config
 from model.random_projection_quanzier import RandomProjectionQuantizer
 
 
 class BestRqFramework(nn.Module):
-    def __init__(self, config: BestRqConfig, encoder: nn.Module):
+    def __init__(self, config: Config, encoder: nn.Module):
         super().__init__()
         self.K = config.num_temporal_dimension_reduction_steps
         self.input_norm = Normalize(mean=0, std=1)

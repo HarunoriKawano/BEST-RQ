@@ -2,11 +2,11 @@ import torch
 from torch import nn
 from torch.linalg import vector_norm
 
-from model.best_rq_config import BestRqConfig
+from model.config import Config
 
 
 class RandomProjectionQuantizer(nn.Module):
-    def __init__(self, config: BestRqConfig):
+    def __init__(self, config: Config):
         super().__init__()
         self.random_projection = nn.Linear(
             config.input_feature_size * config.num_temporal_dimension_reduction_steps, config.code_book_size, bias=False

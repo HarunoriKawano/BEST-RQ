@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch.nn.functional import cross_entropy
 
-from model import BestRqConfig, BestRqFramework
+from model import Config, BestRqFramework
 
 
 class ExampleEncoder(nn.Module):
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     input_lengths = torch.tensor([1000, 871, 389, 487]).to(device)
 
     with open("config.json", "r", encoding="utf-8") as f:
-        config = BestRqConfig(**json.load(f))
+        config = Config(**json.load(f))
 
     model = BestRqFramework(config, encoder).to(device)
 
