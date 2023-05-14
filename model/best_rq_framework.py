@@ -2,7 +2,6 @@ import random
 
 import torch
 from torch import nn
-from torchvision.transforms import Normalize
 
 from model.config import Config
 from model.random_projection_quanzier import RandomProjectionQuantizer
@@ -12,7 +11,7 @@ class BestRqFramework(nn.Module):
     def __init__(self, config: Config, encoder: nn.Module):
         super().__init__()
         self.K = config.num_temporal_dimension_reduction_steps
-        self.input_norm = Normalize(mean=0, std=1)
+        self.layer_norm = nn.LayerNorm(config.input_feature_size)
         self.random_projection_quantizer = RandomProjectionQuantizer(config)
         self.encoder = encoder
         self.config = config
@@ -30,6 +29,8 @@ class BestRqFramework(nn.Module):
         """
         batch_size, num_steps, hidden_size = input_values.size()
 
+        input_values = self.layer_norm(input_values)
+
         if not num_steps % self.config.num_temporal_dimension_reduction_steps == 0:
             transformed_num_steps = (num_steps // self.K + 1) * self.K
             padding = torch.zeros(
@@ -41,10 +42,10 @@ class BestRqFramework(nn.Module):
         input_values = input_values.view(batch_size, -1, self.K * hidden_size)
         quantized_input_lengths = input_lengths // self.K - 1
 
-        masked_input_values, time_mask_indices = self.masking(input_values, quantized_input_lengths)
+        masked_input_values, time_mask_indices = self.masking(input_values.clone(), quantized_input_lengths)
         masked_input_values = masked_input_values.view(batch_size, num_steps, hidden_size)
 
-        labels = self.random_projection_quantizer(self.input_norm(input_values), time_mask_indices)
+        labels = self.random_projection_quantizer(input_values, time_mask_indices)
 
         encoder_out = self.encoder(masked_input_values, input_lengths)
 
