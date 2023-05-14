@@ -29,7 +29,7 @@ if __name__ == '__main__':
     encoder = ExampleEncoder().to(device)
 
     # `(batch size, time steps, feature size)`
-    inputs = torch.randn(4, 1000, 80).to(device)
+    inputs = torch.rand(4, 1000, 80).to(device)
     # `(batch size)` Number of available time steps per batch
     input_lengths = torch.tensor([1000, 871, 389, 487]).to(device)
 
