@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="docs/title.png" width="800px">
+    <img src="https://github.com/HarunoriKawano/best-rq/blob/main/docs/title.png" width="800px">
 </div>
 
 <br/>
@@ -24,8 +24,8 @@
 ***
 
 ## Overview
-<div align="left">
-    <img src="docs/overview.png" width="600px" >
+<div align="center">
+    <img src="https://github.com/HarunoriKawano/best-rq/blob/main/docs/overview.png" width="600px" >
 </div>
 
 ## Installation
