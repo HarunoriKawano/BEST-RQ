@@ -37,6 +37,7 @@ class BestRqFramework(nn.Module):
                 batch_size, transformed_num_steps - num_steps, hidden_size, device=input_values.device
             )
             input_values = torch.cat([input_values, padding], dim=1)
+            num_steps = transformed_num_steps
 
         # Reshape to number of encoder out steps
         input_values = input_values.view(batch_size, -1, self.K * hidden_size)
