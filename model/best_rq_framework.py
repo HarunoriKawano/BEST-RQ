@@ -79,7 +79,7 @@ class BestRqFramework(nn.Module):
             time_mask_idx_candidates = list(range(int(input_lengths[batch])))
             k = int(self.config.mask_prob * input_lengths[batch])
             start_time_mask_idx_array = torch.tensor(
-                random.sample(time_mask_idx_candidates, k=k), device=input_values.device
+                random.sample(time_mask_idx_candidates, k=k), device=input_values.device, dtype=torch.long
             )
 
             for i in range(self.num_time_steps):
