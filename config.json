@@ -1,5 +1,5 @@
 {
-  "mask_prob": 0.065,
+  "mask_prob": 0.01,
   "mask_time": 0.4,
   "input_feature_size": 80,
   "stride_time": 0.01,
