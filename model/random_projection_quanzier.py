@@ -18,6 +18,7 @@ class RandomProjectionQuantizer(nn.Module):
         self.random_projection.weight.requires_grad = False
         self.code_book.requires_grad = False
 
+    @torch.no_grad()
     def forward(self, input_values: torch.Tensor, mask_time_indices: torch.Tensor) -> torch.Tensor:
         """
         Args:
